@@ -28,7 +28,6 @@ h1 {
 }
 
 #formGet {
-
     background-color: var(--beige);
     text-align: center;
     justify-content: center;
@@ -43,8 +42,10 @@ h1 {
 #resultado {
     background-color: var(--beige);
     text-align: center;
-    justify-content: center;
-    align-items: center;
+    display: flex;
+    flex-wrap: wrap; /* Para que las tarjetas se envuelvan a la siguiente línea si no caben en el ancho del contenedor */
+    justify-content: center; /* Para centrar las tarjetas horizontalmente */
+    gap: 20px; /* Espacio entre las tarjetas */
     font-size: larger;
     font-weight: bolder;
     font-family: 'Courier New', Courier, monospace;
@@ -105,6 +106,7 @@ footer {
 
 .card:hover {
     transform: translateY(-5px);
+    transform: scale(0.91);
 }
 
 .card img {

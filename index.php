@@ -13,78 +13,171 @@
 </head>
 
 <body>
-<h1>Hyrule Compendium API</h1>
+    <h1>Hyrule Compendium API</h1>
 
+    <div class="contenedorBusqueda">
+        <div id="formGet">
+            <form method="post" action="" id="formRest">
+                <br>
 
-<div class="contenedorBusqueda">
-    <div id="formGet">
-        <form method="post" action="" id="formRest" >
-            <br>
+                <label for="service">Tipo de Búsqueda</label>
 
-            <label for="service">Tipo de servicio</label>
+                <br>
+                <br>
 
-            <br>
-            <br>
+                <select id="service" name="categorias">
+                    <option value="default" selected disabled>Selecciona una opción</option>
+                    <option value="all">Obtener todos</option>
+                    <option value="IdNombre">Buscar por ID o Nombre</option>
+                    <option value="Category">Category</option>
+                </select>
 
-            <select id="service">
-                <option value="default" selected disabled>Selecciona una opción</option>
-                <option value="All">Obtener todos</option>
-                <option value="IdNombre">Buscar por ID o Nombre</option>
-                <option value="Category">Category</option>
-            </select>
+                <br>
+                <br>
 
-            <br>
-            <br>
+                <div id="formOpc"></div>
 
-            <div id="formOpc">
-            </div>
+                <br>
 
-            <br><br>
+                <input type="submit" id="botonEnviar" name="botonEnviar" value="Enviar" style="display:none">
 
-            <input type = "submit" id = "botonEnviar" name = "botonEnviar" value = "Enviar" style="display:none">
-        </form>
+                <br><br>
+            </form>
+        </div>
     </div>
-</div>
 
-<div id="resultado">
-    <!-- Donde se mostrará la información recibida -->
-    <?php
-    try {
-             if (isset($result) && count($result['data'])>0) {
-            // Mostramos los elementos dinámicamente
-            foreach ($result as $index=>$contenidoDato) {
-                ?>
-                <!-- Tarjeta del menú dinámica -->
-                <div class="card">
-                    <img src="<?php echo $contenidoDato['image']; ?>" alt="">
+    <div id="resultado">
+        <!-- Donde se mostrará la información recibida -->
+        <?php
+        try 
+        {
+            if (isset($result) && is_array($result)) 
+            {
+                // Verificar si el valor de $_POST['categorias'] es "Category"
+                if (isset($_POST['categorias']) && $_POST['categorias'] == "Category")
+                {
+                    // Si es así, muestra las tarjetas como antes
+                    foreach ($result['data'] as $contenidoDato) 
+                    {
+                        ?>
+                        <!-- Tarjeta del menú dinámica -->
+                        <div class="card">
+                            <img src="<?php echo isset($contenidoDato['image']) ? $contenidoDato['image'] : ''; ?>" alt="">
+                            <div class="card-content">
+                                <h3>Nombre: <?php echo isset($contenidoDato['name']) ? $contenidoDato['name'] : 'No disponible'; ?></h3>
+                                <h3>Categoria: <?php echo isset($contenidoDato['category']) ? $contenidoDato['category'] : 'No disponible'; ?></h3>
+                                <p>Lugares comunes:</p>
+                                <ul>
+                                    <?php
+                                    if (isset($contenidoDato['common_locations']) && is_array($contenidoDato['common_locations'])) 
+                                    {
+                                        foreach ($contenidoDato['common_locations'] as $location) 
+                                        {
+                                            echo '<li>' . $location . '</li>';
+                                        }
+                                    } 
 
-                    <div class="card-content">
-                        <h3>Nombre: <?php echo $contenidoDato['name']; ?></h3>
-                        <h3>Categoria: <?php echo $contenidoDato['category']; ?></h3>
-                        <p>Lugares comunes:</p>
-                        <ul>
-                            <?php foreach ($contenidoDato['common_locations'] as $location): ?>
-                                <li><?php echo $location; ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                        <p>Descripción: <?php echo $contenidoDato['description']; ?></p>
-                    </div>
-                </div>
-                <?php
+                                        else 
+                                        {
+                                            echo '<li>No disponibles</li>';
+                                        }
+                                    ?>
+                                </ul>
+                                <p>Descripción: <?php echo isset($contenidoDato['description']) ? $contenidoDato['description'] : 'No disponible'; ?></p>
+                            </div>
+                        </div>
+                        <?php
+                    }
+                } 
+
+                else if (isset($_POST['categorias']) && $_POST['categorias'] == "IdNombre")
+                {
+                    // Si se selecciona "Buscar por ID o Nombre", manejar individualmente
+                    foreach ($result as $contenidoDato) 
+                    {
+                        ?>
+                        <!-- Tarjeta del menú dinámica -->
+                        <div class="card">
+                            <img src="<?php echo isset($contenidoDato['image']) ? $contenidoDato['image'] : ''; ?>" alt="">
+                            <div class="card-content">
+                                <h3>Nombre: <?php echo isset($contenidoDato['name']) ? $contenidoDato['name'] : 'No disponible'; ?></h3>
+                                <h3>Categoria: <?php echo isset($contenidoDato['category']) ? $contenidoDato['category'] : 'No disponible'; ?></h3>
+                                <p>Lugares comunes:</p>
+                                <ul>
+                                    <?php
+                                    if (isset($contenidoDato['common_locations']) && is_array($contenidoDato['common_locations'])) 
+                                    {
+                                        foreach ($contenidoDato['common_locations'] as $location) 
+                                        {
+                                            echo '<li>' . $location . '</li>';
+                                        }
+                                    } 
+
+                                        else 
+                                        {
+                                            echo '<li>No disponibles</li>';
+                                        }
+                                    ?>
+                                </ul>
+                                <p>Descripción: <?php echo isset($contenidoDato['description']) ? $contenidoDato['description'] : 'No disponible'; ?></p>
+                            </div>
+                        </div>
+                        <?php
+                    }
+                }
+
+                else 
+                {
+                    // Si no hay datos de la categoría, mostrar todas las tarjetas detalladas
+                    foreach ($result['data'] as $contenidoDato) 
+                    {
+                        ?>
+                        <!-- Tarjeta del menú dinámica -->
+                        <div class="card">
+                            <img src="<?php echo isset($contenidoDato['image']) ? $contenidoDato['image'] : ''; ?>" alt="">
+                            <div class="card-content">
+                                <h3>Nombre: <?php echo isset($contenidoDato['name']) ? $contenidoDato['name'] : 'No disponible'; ?></h3>
+                                <h3>Categoria: <?php echo isset($contenidoDato['category']) ? $contenidoDato['category'] : 'No disponible'; ?></h3>
+                                <p>Lugares comunes:</p>
+                                <ul>
+                                    <?php
+                                    if (isset($contenidoDato['common_locations']) && is_array($contenidoDato['common_locations'])) 
+                                    {
+                                        foreach ($contenidoDato['common_locations'] as $location) 
+                                        {
+                                            echo '<li>' . $location . '</li>';
+                                        }
+                                    } 
+
+                                        else 
+                                        {
+                                            echo '<li>No disponibles</li>';
+                                        }
+                                    ?>
+                                </ul>
+                                <p>Descripción: <?php echo isset($contenidoDato['description']) ? $contenidoDato['description'] : 'No disponible'; ?></p>
+                            </div>
+                        </div>
+                        <?php
+                    }
+                }
+            } 
+            
+                else 
+                {
+                    echo isset($result['message']) ? $result['message'] : 'No se encontraron resultados';
+                }
+        } 
+
+            catch (PDOException $e) 
+            {
+                echo "Error al mostrar los datos " . $e->getMessage();
             }
-        }
-        else{
-            echo isset($result['message']) ? $result['message'] : 'Buscando ... ';
-        }
+        ?>
+    </div>
 
-    } catch (PDOException $e) {
-        echo "Error al mostrar los datos " . $e->getMessage();
-    }
-    ?>
-</div>
 
-<script src="script.js"></script>
+    <script src="script.js"></script>
 
 </body>
-
 </html>

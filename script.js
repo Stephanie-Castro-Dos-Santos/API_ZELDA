@@ -27,37 +27,39 @@
 });*/
 
 // Evento al pulsar el botón 'bton' y se ejecuta la función saludar()
+// Evento al cambiar la selección en el campo 'service'
 $("#service").change(function () {
     let select = $("#service");
     let opcionSeleccionada = select.val();
 
-    /*$("#formulario-All, #formulario-IdNombre, #formulario-Category").hide();
-    $("#botonEnviar").hide();*/
-
+    // Vaciar el contenido del div formOpc
     $('#formOpc').empty();
 
-    if (opcionSeleccionada !== "default") {
-        let html="";
+    // Mostrar el botón de enviar por defecto
+    $("#botonEnviar").show();
 
-        if(opcionSeleccionada=='Category'){
-            html = 
-            '<select id="categorias" name="categorias" required>'
-                +'<option value="creatures">Creatures</option> '
-                +'<option value="equipments">Equipment</option>'
-                +'<option value="materials">Materials</option>'
-                +'<option value="monsters">Monsters</option>'
-                +'<option value="treasure">Treasure</option>'
-            +'</select>';
-        }
-        else{
-            if(opcionSeleccionada=='IdNombre'){
-                html='<input type="text" name="idNombre" id="idNombre" required="required">';
+    // Verificar la opción seleccionada
+    if (opcionSeleccionada !== "default") {
+        let html = "";
+
+        // Verificar si se seleccionó la opción "Buscar por Categoría"
+        if (opcionSeleccionada == 'Category') {
+            html =
+                '<select id="categorias" name="categorias" required>' +
+                '<option value="creatures">Creatures</option> ' +
+                '<option value="equipment">Equipment</option>' +
+                '<option value="materials">Materials</option>' +
+                '<option value="monsters">Monsters</option>' +
+                '<option value="treasure">Treasure</option>' +
+                '</select>';
+        } else {
+            // Verificar si se seleccionó la opción "Buscar por ID o Nombre"
+            if (opcionSeleccionada == 'IdNombre') {
+                html = '<input type="text" name="idNombre" id="idNombre" required="required">';
             }
         }
 
+        // Agregar el HTML generado al div formOpc
         $('#formOpc').append(html);
-        
-        $("#botonEnviar").show();
     }
-}); 
-
+});
