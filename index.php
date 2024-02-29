@@ -1,4 +1,4 @@
-9<?php require_once("rest.php"); ?>
+<?php require_once("rest.php"); ?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -18,7 +18,7 @@
 
 <div class="contenedorBusqueda">
     <div id="formGet">
-        <form method="post" action="">
+        <form method="post" action="" id="formRest" >
             <br>
 
             <label for="service">Tipo de servicio</label>
@@ -26,8 +26,8 @@
             <br>
             <br>
 
-            <select id="service" onchange="cambiarFormulario()">
-                <option value="default" selected="selected" hidden="hidden">Selecciona una opción</option>
+            <select id="service">
+                <option value="default" selected disabled>Selecciona una opción</option>
                 <option value="All">Obtener todos</option>
                 <option value="IdNombre">Buscar por ID o Nombre</option>
                 <option value="Category">Category</option>
@@ -35,30 +35,13 @@
 
             <br>
             <br>
-            <div id="formulario-All" style="display: none">
-                <form id="FormAll">
-                    <button type="submit" name="botonMostrar">Enviar</button>
-                </form>
+
+            <div id="formOpc">
             </div>
-            <div id="formulario-IdNombre" style="display: none">
-                <form id="formID">
-                    <input type="text" name="id" id="id" required="required">
-                    <button type="submit" name="botonEnviar">Enviar</button>
-                </form>
-            </div>
-            <div id="formulario-Category" style="display: none">
-                <form id="formCategory">
-                    <select id="categorias" name="categorias">
-                        <option>Creatures</option>
-                        <option>Equipment</option>
-                        <option>Materials</option>
-                        <option>Monsters</option>
-                        <option>Treasure</option>
-                    </select>
-                    <button type="submit" name="EnviarCategory">Enviar</button>
-                </form>
-            </div>
-            <!--<input type = "submit" id = "botonEnviar" name = "botonEnviar" value = "Enviar">-->
+
+            <br><br>
+
+            <input type = "submit" id = "botonEnviar" name = "botonEnviar" value = "Enviar" style="display:none">
         </form>
     </div>
 </div>
@@ -67,9 +50,9 @@
     <!-- Donde se mostrará la información recibida -->
     <?php
     try {
-        if (isset($result)) {
+             if (isset($result) && count($result['data'])>0) {
             // Mostramos los elementos dinámicamente
-            foreach ($result as $contenidoDato) {
+            foreach ($result as $index=>$contenidoDato) {
                 ?>
                 <!-- Tarjeta del menú dinámica -->
                 <div class="card">
@@ -89,6 +72,9 @@
                 </div>
                 <?php
             }
+        }
+        else{
+            echo isset($result['message']) ? $result['message'] : 'Buscando ... ';
         }
 
     } catch (PDOException $e) {
